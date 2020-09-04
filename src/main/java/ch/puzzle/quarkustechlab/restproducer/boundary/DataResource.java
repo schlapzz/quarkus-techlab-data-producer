@@ -1,6 +1,6 @@
-package ch.puzzle.quarkustechlab.producer.boundary;
+package ch.puzzle.quarkustechlab.restproducer.boundary;
 
-import ch.puzzle.quarkustechlab.producer.entity.SensorMeasurement;
+import ch.puzzle.quarkustechlab.restproducer.entity.SensorMeasurement;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
