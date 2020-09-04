@@ -1,6 +1,6 @@
-package org.acme.quickstart;
+package ch.puzzle.quarkustechlab.producer.boundary;
 
-import org.acme.quickstart.entity.SensorMeasurement;
+import ch.puzzle.quarkustechlab.producer.entity.SensorMeasurement;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

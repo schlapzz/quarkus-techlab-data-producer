@@ -1,4 +1,4 @@
-package org.acme.quickstart.entity;
+package ch.puzzle.quarkustechlab.producer.entity;
 
 public class SensorMeasurement {
 
