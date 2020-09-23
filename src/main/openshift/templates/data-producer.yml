@@ -6,6 +6,25 @@ metadata:
 items:
 
   - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      labels:
+        application: quarkus-techlab
+      name: data-producer
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - annotations:
+            openshift.io/imported-from: g1raffi/quarkus-techlab-data-producer:kafka
+          from:
+            kind: DockerImage
+            name: g1raffi/quarkus-techlab-data-producer:kafka
+          name: kafka
+          referencePolicy:
+            type: Source
+
+  - apiVersion: v1
     kind: DeploymentConfig
     metadata:
       labels:
@@ -60,6 +79,14 @@ items:
                   memory: 100Mi
       triggers:
         - type: ConfigChange
+        - imageChangeParams:
+            automatic: true
+            containerNames:
+              - data-producer
+            from:
+              kind: ImageStreamTag
+              name: data-producer:kafka
+          type: ImageChange
   
   - apiVersion: v1
     kind: Service
@@ -77,4 +104,21 @@ items:
         deploymentConfig: data-producer
       sessionAffinity: None
       type: ClusterIP
-          
+
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      labels:
+        application: quarkus-techlab
+      name: data-producer
+    spec:
+      path: /
+      tls:
+        caCertificate: null
+        certificate: null
+        insecureEdgeTerminationPolicy: Allow
+        key: null
+        termination: edge
+      to:
+        kind: Service
+        name: data-producer
