@@ -11,7 +11,19 @@ items:
       labels:
         application: quarkus-techlab
       name: data-producer
-  
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - annotations:
+            openshift.io/imported-from: g1raffi/quarkus-techlab-data-producer:kafka
+          from:
+            kind: DockerImage
+            name: g1raffi/quarkus-techlab-data-producer:kafka
+          name: kafka
+          referencePolicy:
+            type: Source
+
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
@@ -31,7 +43,7 @@ items:
             deploymentConfig: data-producer
         spec:
           containers:
-            - image: data-producer
+            - image: g1raffi/data-producer:kafka
               imagePullPolicy: Always
               livenessProbe:
                 failureThreshold: 5
@@ -66,16 +78,16 @@ items:
                   cpu: 50m
                   memory: 100Mi
       triggers:
+        - type: ConfigChange
         - imageChangeParams:
             automatic: true
-            containerNames: 
+            containerNames:
               - data-producer
             from:
               kind: ImageStreamTag
-              name: data-producer:latest
+              name: data-producer:kafka
           type: ImageChange
-        - type: ConfigChange
-  
+
   - apiVersion: v1
     kind: Service
     metadata:
@@ -92,4 +104,21 @@ items:
         deploymentConfig: data-producer
       sessionAffinity: None
       type: ClusterIP
-          
+
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      labels:
+        application: quarkus-techlab
+      name: data-producer
+    spec:
+      path: /
+      tls:
+        caCertificate: null
+        certificate: null
+        insecureEdgeTerminationPolicy: Allow
+        key: null
+        termination: edge
+      to:
+        kind: Service
+        name: data-producer
