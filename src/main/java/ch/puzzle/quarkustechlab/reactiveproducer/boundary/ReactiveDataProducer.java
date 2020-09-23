@@ -39,7 +39,7 @@ public class ReactiveDataProducer {
                 .withHeaders(headersMapExtractAdapter.getRecordHeaders())
                 .build();
         Message<SensorMeasurement> message = Message.of(measurement, Metadata.of(metadata));
-        logger.info("Sending message with Jaeger Tracing Headers");
+        logger.info("Producing message");
         emitter.send(message);
     }
 }
