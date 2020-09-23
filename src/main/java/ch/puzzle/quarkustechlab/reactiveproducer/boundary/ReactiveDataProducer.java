@@ -5,6 +5,7 @@ import ch.puzzle.quarkustechlab.restproducer.entity.SensorMeasurement;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMapInjectAdapter;
+import io.quarkus.scheduler.Scheduled;
 import io.smallrye.reactive.messaging.kafka.OutgoingKafkaRecordMetadata;
 import org.eclipse.microprofile.reactive.messaging.*;
 
@@ -24,9 +25,13 @@ public class ReactiveDataProducer {
     @Inject
     Tracer tracer;
 
+    @Scheduled(every = "2s")
     public void sendMessage() {
         SensorMeasurement measurement = new SensorMeasurement();
         HeadersMapExtractAdapter headersMapExtractAdapter = new HeadersMapExtractAdapter();
+        if (tracer.activeSpan() == null) {
+            tracer.buildSpan("sendMessage").startActive(true);
+        }
         tracer.inject(tracer.activeSpan().context(), Format.Builtin.TEXT_MAP, headersMapExtractAdapter);
         OutgoingKafkaRecordMetadata metadata = OutgoingKafkaRecordMetadata.<SensorMeasurement>builder()
                 .withKey(measurement)
