@@ -29,9 +29,7 @@ public class ReactiveDataProducer {
     public void sendMessage() {
         SensorMeasurement measurement = new SensorMeasurement();
         HeadersMapExtractAdapter headersMapExtractAdapter = new HeadersMapExtractAdapter();
-        if (tracer.activeSpan() == null) {
-            tracer.buildSpan("sendMessage").startActive(true);
-        }
+        tracer.buildSpan("sendMessage").startActive(true);
         tracer.inject(tracer.activeSpan().context(), Format.Builtin.TEXT_MAP, headersMapExtractAdapter);
         OutgoingKafkaRecordMetadata metadata = OutgoingKafkaRecordMetadata.<SensorMeasurement>builder()
                 .withKey(measurement)
@@ -41,5 +39,6 @@ public class ReactiveDataProducer {
         Message<SensorMeasurement> message = Message.of(measurement, Metadata.of(metadata));
         logger.info("Sending message with Jaeger Tracing Headers");
         emitter.send(message);
+        tracer.activeSpan().finish();
     }
 }
