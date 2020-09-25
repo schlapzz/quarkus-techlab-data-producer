@@ -85,7 +85,7 @@ items:
               - data-producer
             from:
               kind: ImageStreamTag
-              name: data-producer:kafka
+              name: data-producer:rest
           type: ImageChange
 
   - apiVersion: v1
