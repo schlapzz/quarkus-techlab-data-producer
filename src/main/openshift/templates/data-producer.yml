@@ -11,18 +11,6 @@ items:
       labels:
         application: quarkus-techlab
       name: data-producer
-    spec:
-      lookupPolicy:
-        local: false
-      tags:
-        - annotations:
-            openshift.io/imported-from: g1raffi/quarkus-techlab-data-producer:kafka
-          from:
-            kind: DockerImage
-            name: g1raffi/quarkus-techlab-data-producer:kafka
-          name: kafka
-          referencePolicy:
-            type: Source
 
   - apiVersion: v1
     kind: DeploymentConfig
@@ -85,7 +73,7 @@ items:
               - data-producer
             from:
               kind: ImageStreamTag
-              name: data-producer:kafka
+              name: data-producer:latest
           type: ImageChange
   
   - apiVersion: v1
