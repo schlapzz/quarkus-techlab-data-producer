@@ -16,11 +16,11 @@ items:
         local: false
       tags:
         - annotations:
-            openshift.io/imported-from: g1raffi/quarkus-techlab-data-producer:kafka
+            openshift.io/imported-from: g1raffi/quarkus-techlab-data-producer:rest
           from:
             kind: DockerImage
-            name: g1raffi/quarkus-techlab-data-producer:kafka
-          name: kafka
+            name: g1raffi/quarkus-techlab-data-producer:rest
+          name: rest
           referencePolicy:
             type: Source
 
@@ -43,7 +43,7 @@ items:
             deploymentConfig: data-producer
         spec:
           containers:
-            - image: g1raffi/data-producer:kafka
+            - image: g1raffi/data-producer:rest
               imagePullPolicy: Always
               livenessProbe:
                 failureThreshold: 5
