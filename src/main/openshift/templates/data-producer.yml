@@ -5,27 +5,8 @@ metadata:
     application: quarkus-techlab
 items:
 
-  - apiVersion: v1
-    kind: ImageStream
-    metadata:
-      labels:
-        application: quarkus-techlab
-      name: data-producer
-    spec:
-      lookupPolicy:
-        local: false
-      tags:
-        - annotations:
-            openshift.io/imported-from: g1raffi/quarkus-techlab-data-producer:rest
-          from:
-            kind: DockerImage
-            name: g1raffi/quarkus-techlab-data-producer:rest
-          name: rest
-          referencePolicy:
-            type: Source
-
-  - apiVersion: v1
-    kind: DeploymentConfig
+  - apiVersion: apps/v1
+    kind: Deployment
     metadata:
       labels:
         application: quarkus-techlab
@@ -33,17 +14,16 @@ items:
     spec:
       replicas: 1
       selector:
-        deploymentConfig: data-producer
-      strategy:
-        type: Recreate
+        matchLabels:
+          deployment: data-producer
       template:
         metadata:
           labels:
             application: quarkus-techlab
-            deploymentConfig: data-producer
+            deployment: data-producer
         spec:
           containers:
-            - image: g1raffi/data-producer:rest
+            - image: g1raffi/quarkus-techlab-data-producer:rest
               imagePullPolicy: Always
               livenessProbe:
                 failureThreshold: 5
@@ -77,16 +57,6 @@ items:
                 requests:
                   cpu: 50m
                   memory: 100Mi
-      triggers:
-        - type: ConfigChange
-        - imageChangeParams:
-            automatic: true
-            containerNames:
-              - data-producer
-            from:
-              kind: ImageStreamTag
-              name: data-producer:rest
-          type: ImageChange
 
   - apiVersion: v1
     kind: Service
@@ -101,7 +71,7 @@ items:
           protocol: TCP
           targetPort: 8080
       selector:
-        deploymentConfig: data-producer
+        deployment: data-producer
       sessionAffinity: None
       type: ClusterIP
 
