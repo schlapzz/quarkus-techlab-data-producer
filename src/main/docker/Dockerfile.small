@@ -1,5 +1,6 @@
 ## Stage 1 : build with maven builder image with native capabilities
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1
+FROM centos/ruby-22-centos7
+
 WORKDIR /work/
 COPY --from=build /usr/src/app/target/*-runner /work/application
 
