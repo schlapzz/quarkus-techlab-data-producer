@@ -6,4 +6,3 @@ COPY src /usr/src/app/src
 USER root
 RUN chown -R quarkus /usr/src/app
 USER quarkus
-
