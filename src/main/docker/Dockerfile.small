@@ -3,12 +3,17 @@ FROM docker.io/schlapzz/producer-base:0.1.0
 
 WORKDIR /work/
 
+RUN mvn -f /usr/src/app/pom.xml -Pnative clean package
+COPY /usr/src/app/target/*-runner /work/application
 
 # set up permissions for user `1001`
 RUN chmod 775 /work /work/application \
   && chown -R 1001 /work \
   && chmod -R "g+rwX" /work \
   && chown -R 1001:root /work
+
+
+
 
 EXPOSE 8080
 USER 1001
