@@ -1,5 +1,5 @@
 ## Stage 1 : build with maven builder image with native capabilities
-FROM quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1
 WORKDIR /work/
 COPY --from=build /usr/src/app/target/*-runner /work/application
 
