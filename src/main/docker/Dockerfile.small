@@ -1,5 +1,5 @@
 ## Stage 1 : build with maven builder image with native capabilities
-FROM docker.io/schlapzz/producer-base:0.1.1
+FROM quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
 WORKDIR /work/
 COPY --from=build /usr/src/app/target/*-runner /work/application
 
