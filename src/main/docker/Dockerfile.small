@@ -1,5 +1,5 @@
 ## Stage 1 : build with maven builder image with native capabilities
-FROM schlapzz/producer-base:0.1.1
+FROM docker.io/schlapzz/producer-base:0.1.1
 WORKDIR /work/
 COPY --from=build /usr/src/app/target/*-runner /work/application
 
