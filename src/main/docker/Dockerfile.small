@@ -1,5 +1,5 @@
 ## Stage 1 : build with maven builder image with native capabilities
-FROM centos/ruby-22-centos7
+FROM docker.io/centos/ruby-22-centos7
 
 WORKDIR /work/
 COPY --from=build /usr/src/app/target/*-runner /work/application
