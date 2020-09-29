@@ -4,26 +4,43 @@ metadata:
   labels:
     application: quarkus-techlab
 items:
-
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      name: data-producer
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+      - annotations: null
+        from:
+          kind: DockerImage
+          name: g1raffi/quarkus-techlab-data-producer:rest
+        generation: 1
+        importPolicy:
+          scheduled: true
+        name: rest
+        referencePolicy:
+        type: Source
   - apiVersion: apps/v1
     kind: Deployment
     metadata:
       labels:
         application: quarkus-techlab
-      name: data-producer
+      name: data-consumer
     spec:
       replicas: 1
       selector:
         matchLabels:
-          deployment: data-producer
+          deployment: data-consumer
       template:
         metadata:
           labels:
             application: quarkus-techlab
-            deployment: data-producer
+            deployment: data-consumer
         spec:
           containers:
-            - image: g1raffi/quarkus-techlab-data-producer:rest
+            - image: g1raffi/quarkus-techlab-data-consumer:rest
               imagePullPolicy: Always
               livenessProbe:
                 failureThreshold: 5
@@ -45,7 +62,7 @@ items:
                 periodSeconds: 20
                 successThreshold: 1
                 timeoutSeconds: 15
-              name: data-producer
+              name: data-consumer
               port:
                 - containerPort: 8080
                   name: http
@@ -63,15 +80,15 @@ items:
     metadata:
       labels:
         application: quarkus-techlab
-      name: data-producer
+      name: data-consumer
     spec:
       ports:
-        - name: data-producer-http
+        - name: data-consumer-http
           port: 8080
           protocol: TCP
           targetPort: 8080
       selector:
-        deployment: data-producer
+        deployment: data-consumer
       sessionAffinity: None
       type: ClusterIP
 
@@ -80,7 +97,7 @@ items:
     metadata:
       labels:
         application: quarkus-techlab
-      name: data-producer
+      name: data-consumer
     spec:
       path: /
       tls:
@@ -91,4 +108,4 @@ items:
         termination: edge
       to:
         kind: Service
-        name: data-producer
+        name: data-consumer
